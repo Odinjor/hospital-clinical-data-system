@@ -193,9 +193,7 @@ insert into Diagnosis (encounter_id, icd10_code, diagnosis_date) values
 (56, 'S83.509A', '2026-02-08'),
 (57, 'M16.9', '2026-02-14');
 
-select * from Encounter where encounter_id = 35;
-update Diagnosis set diagnosis_date = '2026-01-21' where encounter_id = 35;
-SELECT * FROM Diagnosis WHERE encounter_id = 35;
+
 insert into Observation (encounter_id, loinc_code, observation_type, value, unit, observed_at) values 
 (1, "8867-4", "Heart Rate", 110, "bpm", '2026-01-05'),
 (1, "8480-6", "Blood Pressure", 145, "mmHg", '2026-01-05'),
@@ -203,7 +201,7 @@ insert into Observation (encounter_id, loinc_code, observation_type, value, unit
 (2, "8867-4", "Heart Rate", 110, "bpm", "2026-01-05"),
 (3, "8310-5", "Temperature", 101, "F", '2026-01-06'),
 (3, "8867-4", "Heart Rate", 110, "bpm", '2026-01-06'),
-(4, "29463.7", "Weight", 75, "kg", '2026-01-06'),
+(4, "29463-7", "Weight", 75, "kg", '2026-01-06'),
 (5, "8867-4", "Heart Rate", 75, "bpm", '2026-01-07'),
 (6, "8867-4", "Heart Rate", 75, "bpm", '2026-01-12'),
 (6, "8480-6", "Blood Pressure", 110, "mmHg", '2026-01-12'),
@@ -213,13 +211,13 @@ insert into Observation (encounter_id, loinc_code, observation_type, value, unit
 (8, "8480-6", "Blood Pressure", 145, "mmHg", '2026-01-12'),
 (9, "8867-4", "Heart Rate", 75, "bpm", '2026-01-13'),
 (9, "8480-6", "Blood Pressure", 110, "mmHg", '2026-01-13'),
-(10, "29463.7", "Weight", 95, "kg", '2026-01-13'),
+(10, "29463-7", "Weight", 95, "kg", '2026-01-13'),
 (11, "8867-4", "Heart Rate", 75, "bpm", '2026-01-13'),
 (12, "8867-4", "Heart Rate", 110, "bpm", '2026-01-13'),
 (12, "8480-6", "Blood Pressure", 145, "mmHg", '2026-01-13'),
 (13, "8867-4", "Heart Rate", 110, "bpm", '2026-01-13'),
 (13, "8480-6", "Blood Pressure", 145, "mmHg", '2026-01-13'),
-(14, "29463.7", "Weight", 75, "kg", '2026-01-14'),
+(14, "29463-7", "Weight", 75, "kg", '2026-01-14'),
 (16, "8867-4", "Heart Rate", 110, "bpm", '2026-01-14'),
 (16, "8480-6", "Blood Pressure", 145, "mmHg", '2026-01-14'),
 (17, "8867-4", "Heart Rate", 110, "bpm", '2026-01-14'),
@@ -233,7 +231,7 @@ insert into Observation (encounter_id, loinc_code, observation_type, value, unit
 (23, "8867-4", "Heart Rate", 110, "bpm", '2026-01-15'),
 (23, "8480-6", "Blood Pressure", 145, "mmHg", '2026-01-15'),
 (24, "8867-4", "Heart Rate", 75, "bpm", '2026-01-16'),
-(25, "29463.7", "Weight", 95, "kg", '2026-01-17'),
+(25, "29463-7", "Weight", 95, "kg", '2026-01-17'),
 (28, "8867-4", "Heart Rate", 75, "bpm", '2026-01-19'),
 (28, "8480-6", "Blood Pressure", 110, "mmHg", '2026-01-19'),
 (29, "8867-4", "Heart Rate", 75, "bpm", '2026-01-19'),
@@ -242,7 +240,7 @@ insert into Observation (encounter_id, loinc_code, observation_type, value, unit
 (31, "8480-6", "Blood Pressure", 110, "mmHg", '2026-01-20'),
 (32, "8867-4", "Heart Rate", 75, "bpm", '2026-01-20'),
 (32, "8480-6", "Blood Pressure", 110, "mmHg", '2026-01-20'),
-(34, "29463.7", "Weight", 75, "kg", '2026-01-20'),
+(34, "29463-7", "Weight", 75, "kg", '2026-01-20'),
 (35, "8867-4", "Heart Rate", 75, "bpm", '2026-01-21'),
 (35, "8480-6", "Blood Pressure", 110, "mmHg", '2026-01-21'),
 (36, "8867-4", "Heart Rate", 75, "bpm", '2026-01-21'),
@@ -256,7 +254,62 @@ insert into Observation (encounter_id, loinc_code, observation_type, value, unit
 (48, "8867-4", "Heart Rate", 75, "bpm", '2026-01-29'),
 (48, "8480-6", "Blood Pressure", 110, "mmHg", '2026-01-29');
 
+INSERT INTO Medication (drug_name, dosage, route) VALUES
+('Lisinopril','10mg','Oral'),
+('Metformin','500mg','Oral'),
+('Amoxicillin','500mg','Oral'),
+('Aspirin','81mg','Oral'),
+('Morphine','5mg','IV'),
+('Ibuprofen','400mg','Oral'),
+('Atorvastatin','20mg','Oral');
 
+INSERT INTO Medication_Administration
+(encounter_id, provider_id, medication_id, administered_at) VALUES
+-- Emergency (HTN / chest pain)
+(1,1,1,'2026-01-05'),
+(2,3,3,'2026-01-05'),
+-- Cardiology
+(3,11,4,'2026-01-06'),
+(8,12,7,'2026-01-12'),
+(9,11,4,'2026-01-13'),
+-- Orthopedic (pain)
+(4,21,5,'2026-01-06'),
+(10,23,6,'2026-01-13'),
+(14,22,6,'2026-01-14'),
+-- Neurology
+(5,31,6,'2026-01-07'),
+(11,31,6,'2026-01-13'),
+-- Follow-ups (lighter meds)
+(6,2,1,'2026-01-12'),
+(7,3,3,'2026-01-12'),
+-- Mixed cases
+(12,1,4,'2026-01-13'),
+(13,11,7,'2026-01-13'),
+(16,23,6,'2026-01-14'),
+(17,1,5,'2026-01-14'),
+-- Later timeline
+(21,11,4,'2026-01-15'),
+(22,12,7,'2026-01-15'),
+(23,1,1,'2026-01-15'),
+(25,21,5,'2026-01-17'),
+(28,31,6,'2026-01-19'),
+(29,11,4,'2026-01-19'),
+(31,1,1,'2026-01-20'),
+(32,12,7,'2026-01-20'),
+(35,11,4,'2026-01-21'),
+(36,1,1,'2026-01-21'),
+(37,12,7,'2026-01-22'),
+(38,1,1,'2026-01-22'),
+(47,11,4,'2026-01-28'),
+(48,1,1,'2026-01-29');
+
+insert into Staffing_Notes( staffing_date, staff_status) values
+('2026-01-11', 'Overstaffed'),
+('2026-01-18', 'Understaffed'),
+('2026-01-25', 'Staffed'),
+('2026-02-01', 'Staffed'),
+('2026-02-08', 'Overstaffed'),
+('2026-02-15', 'Overstaffed');
 
 
 
