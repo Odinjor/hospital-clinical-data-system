@@ -1,0 +1,4 @@
+<h1>Encounters</h1>
+{% for e in encounters %}
+<p>Encounter {{e.encounter_id}} | Patient {{e.patient_id}} | {{e.encounter_type}}</p>
+{% endfor %}
