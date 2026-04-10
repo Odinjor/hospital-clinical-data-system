@@ -1,19 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Hospital Dashboard</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<nav>
-    <a href="/">Dashboard</a> |
-    <a href="/patients">Patients</a> |
-    <a href="/encounters">Encounters</a>
-</nav>
-
-<hr>
-
-{% block content %}{% endblock %}
-
-</body>
-</html>
+{% block content %}
+<h1>Hospital Dashboard</h1>
+<p>Welcome to your system</p>
+{% endblock %}
