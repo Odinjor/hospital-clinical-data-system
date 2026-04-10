@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-from models import db
 
 # import your route files
 from routes.patient_routes import patients_bp
