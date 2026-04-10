@@ -50,3 +50,17 @@ def update_patient(patient_id):
     """
     execute_query(query, (dob, sex, ethnicity, patient_id))
     return redirect("/patients")
+
+@patients_bp.route("/patients/<int:patient_id>/report")
+def patient_report(patient_id):
+    query = """ 
+    SELECT e.encounter_id, d.icd10_code, p.role
+    FROM Encounter e
+    JOIN Diagnosis d ON e.encounter_id = d.encounter_id
+    LEFT JOIN Medication_Administration m ON e.encounter_id = m.encounter_id
+    LEFT JOIN Provider p ON m.provider_id = p.provider_id
+    WHERE e.patient_id = %s
+
+    """
+    result = execute_query(query, (patient_id,), fetch=True)
+    return render_template("patient_report.html", encounters=result)
