@@ -29,7 +29,7 @@ create table Encounter(
 	patient_id INT,
 	dept_id INT,
 	encounter_date DATE,
-	discharge_date DATE,
+	discharge_date DATE null,
 	encounter_type VARCHAR(50),
 	foreign key (patient_id) references Patient(patient_id),
 	foreign key (dept_id) references Department(dept_id)

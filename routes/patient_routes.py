@@ -37,19 +37,41 @@ def delete_patient(patient_id):
     execute_query(query, (patient_id,))
     return redirect("/patients")
 
-@patients_bp.route("/patients/update/<int:patient_id>", methods=["POST"])
+@patients_bp.route("/patients/update/<int:patient_id>", methods=["GET", "POST"])
 def update_patient(patient_id):
-    dob = request.form["dob"]
-    sex = request.form["sex"]
-    ethnicity = request.form["ethnicity"]
-
-    query = """ 
-    UPDATE Patient 
-    SET dob = %s, sex = %s, ethnicity = %s 
-    WHERE patient_id = %s
-    """
-    execute_query(query, (dob, sex, ethnicity, patient_id))
-    return redirect("/patients")
+    if request.method == "POST":
+        dob = request.form.get("dob")
+        sex = request.form.get("sex")
+        ethnicity = request.form.get("ethnicity")
+    
+        # Build dynamic query based on provided values
+        updates = []
+        params = []
+        
+        if patient_id:
+            updates.append("patient_id = %s")
+            params.append(patient_id)
+        if dob:
+            updates.append("dob = %s")
+            params.append(dob)
+        if sex:
+            updates.append("sex = %s")
+            params.append(sex)
+        if ethnicity:
+            updates.append("ethnicity = %s")
+            params.append(ethnicity)
+        
+        if not updates:
+            return redirect("/patients")  # No updates provided
+        
+        params.append(patient_id)
+        query = f"UPDATE Patient SET {', '.join(updates)} WHERE patient_id = %s"
+        execute_query(query, tuple(params))
+        return redirect("/patients")
+    else:
+        query = "SELECT * FROM Patient WHERE patient_id = %s"
+        result = execute_query(query, (patient_id,), fetch=True)
+        return render_template("update_patient.html", patient=result[0])           
 
 @patients_bp.route("/patients/<int:patient_id>/report")
 def patient_report(patient_id):
