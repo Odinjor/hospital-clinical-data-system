@@ -1,14 +1,8 @@
 from flask import Flask, render_template
-import mysql.connector
+from models.db import get_db_connection
 
 app = Flask(__name__)
-
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="StarMan#4490",
-    database="hospital_db"
-)
+db = get_db_connection()
 
 @app.route("/")
 def home():
