@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Visits Per Department</h1>
+
+<div class="table-section">
+    {% if data %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Department</th>
+                <th>Total Visits</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No data available.</p>
+    {% endif %}
+</div>
+
+<a href="/dashboard/trends" class="nav-link">Next: Workload Trends →</a>
+
+{% endblock %}

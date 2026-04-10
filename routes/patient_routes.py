@@ -3,7 +3,7 @@ from models.db import execute_query
 
 patients_bp = Blueprint("patients", __name__)
 
-patients_bp.route("/patients")
+@patients_bp.route("/patients/list", methods=["GET"])
 def list_patients():
     query = "SELECT * FROM Patient"
     result = execute_query(query, fetch=True)
@@ -14,9 +14,9 @@ def search_patient():
     patient_id = request.args.get("patient_id")
 
     query = "SELECT * FROM Patient WHERE patient_id = %s"
-    result = execute_query(query, (patient_id,))
+    result = execute_query(query, (patient_id,), fetch=True)
 
-    return render_template("patients.html", patients=result)
+    return render_template("patient/index.html", patients=result)
 
 @patients_bp.route("/patients/add", methods=["POST"])
 def add_patient():
@@ -71,7 +71,7 @@ def update_patient(patient_id):
     else:
         query = "SELECT * FROM Patient WHERE patient_id = %s"
         result = execute_query(query, (patient_id,), fetch=True)
-        return render_template("update_patient.html", patient=result[0])           
+        return render_template("patient/update.html", patient=result[0])           
 
 @patients_bp.route("/patients/<int:patient_id>/report")
 def patient_report(patient_id):
@@ -85,4 +85,4 @@ def patient_report(patient_id):
 
     """
     result = execute_query(query, (patient_id,), fetch=True)
-    return render_template("patient_report.html", encounters=result)
+    return render_template("patient/report.html", encounters=result)

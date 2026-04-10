@@ -1,19 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hospital Dashboard</title>
+    <title>Hospital Clinical Data System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<nav>
-    <a href="/">Dashboard</a> |
-    <a href="/patients">Patients</a> |
-    <a href="/encounters">Encounters</a>
+<header>
+    <h1>🏥 Hospital Clinical Data System</h1>
+</header>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-home">Hospital Dashboard</a>
+        
+        <div class="nav-group">
+            <strong>Patients</strong>
+            <a href="/patients">View All</a>
+        </div>
+        
+        <div class="nav-group">
+            <strong>Encounters</strong>
+            <a href="/encounters">View All</a>
+        </div>
+        
+        <div class="nav-group">
+            <strong>Analytics</strong>
+            <a href="/dashboard/visits">Visits per Department</a>
+            <a href="/dashboard/trends">Workload Trends</a>
+            <a href="/dashboard/diagnoses">Common Diagnoses</a>
+            <a href="/dashboard/demands">Resource Demands</a>
+        </div>
+    </div>
 </nav>
 
-<hr>
+<main>
+    {% block content %}{% endblock %}
+</main>
 
-{% block content %}{% endblock %}
+<footer>
+    <p>&copy; 2026 Hospital Clinical Data System. All rights reserved.</p>
+</footer>
 
 </body>
 </html>

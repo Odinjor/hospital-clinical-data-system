@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Update Encounter</h1>
+
+<div class="form-container">
+    <div class="form-section">
+        <h3>Edit Encounter ID: {{ encounter[0] }}</h3>
+        <form method="POST" action="/encounters/update/{{ encounter[0] }}" class="patient-form">
+            <label>Patient ID:</label>
+            <input type="number" name="patient_id" value="{{ encounter[1] }}">
+            
+            <label>Department ID:</label>
+            <input type="number" name="dept_id" value="{{ encounter[2] }}">
+            
+            <label>Encounter Type:</label>
+            <input type="text" name="encounter_type" value="{{ encounter[5] }}">
+            
+            <label>Discharge Date:</label>
+            <input type="date" name="discharge_date" value="{{ encounter[4] if encounter[4] else '' }}">
+            
+            <button type="submit" class="btn-primary">Update Encounter</button>
+            <a href="/encounters" class="btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<style>
+.form-container {
+    max-width: 500px;
+    margin: 30px auto;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 3px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+}
+</style>
+
+{% endblock %}

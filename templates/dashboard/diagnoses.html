@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Common Diagnoses</h1>
+
+<div class="table-section">
+    {% if data %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ICD-10 Code</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No data available.</p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="/dashboard/trends" class="nav-link">← Previous: Trends</a>
+    <a href="/dashboard/demands" class="nav-link" style="float: right;">Next: Demands →</a>
+</div>
+
+{% endblock %}

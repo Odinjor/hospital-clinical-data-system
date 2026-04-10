@@ -12,7 +12,7 @@ def visits_per_department():
     GROUP BY d.dept_name
     """
     result = execute_query(query, fetch=True)
-    return render_template("dashboard_visits.html", data=result)
+    return render_template("dashboard/visits.html", data=result)
 
 @dashboard_bp.route("/dashboard/trends")
 def workload_trends():
@@ -22,7 +22,7 @@ def workload_trends():
     GROUP BY dept_id, week
     """
     result = execute_query(query, fetch=True)
-    return render_template("dashboard_trends.html", data=result)
+    return render_template("dashboard/trends.html", data=result)
 
 @dashboard_bp.route("/dashboard/diagnoses")
 def common_diagnoses():
@@ -33,7 +33,7 @@ def common_diagnoses():
     ORDER BY count DESC
     """
     result = execute_query(query, fetch=True)
-    return render_template("dashboard_diagnoses.html", data=result)
+    return render_template("dashboard/diagnoses.html", data=result)
 
 @dashboard_bp.route("/dashboard/demands")
 def resource_demands():
@@ -48,4 +48,4 @@ def resource_demands():
 
     """
     result = execute_query(query, fetch=True)
-    return render_template("dashboard_demands.html", data=result)
+    return render_template("dashboard/demands.html", data=result)

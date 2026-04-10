@@ -15,7 +15,7 @@ app.register_blueprint(encounters_bp)
 # home route
 @app.route("/")
 def home():
-    return render_template("dashboard.html")  # your main page
+    return render_template("dashboard/index.html")  # your main page
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,13 +3,13 @@ from models.db import execute_query
 
 encounters_bp = Blueprint("encounters", __name__)
 
-@encounters_bp.route("/encounters")
+@encounters_bp.route("/encounters/list", methods=["GET"])
 def list_encounters():
     query = """ 
     SELECT * FROM Encounter e
     """
     result = execute_query(query, fetch=True)
-    return render_template("encounters.html", data=result)
+    return render_template("encounters/index.html", encounters=result)
 
 @encounters_bp.route("/encounters/add", methods=["POST"])
 def add_encounter():
@@ -59,7 +59,7 @@ def update_encounter(encounter_id):
     else:
         query = "SELECT * FROM Encounter WHERE encounter_id = %s"
         result = execute_query(query, (encounter_id,), fetch=True)
-        return render_template("update_encounter.html", encounter=result[0])
+        return render_template("encounters/update.html", encounter=result[0])
     
 @encounters_bp.route("/encounters/search/<int:patient_id>")
 def search_encounters(patient_id):
@@ -68,4 +68,4 @@ def search_encounters(patient_id):
     WHERE e.patient_id = %s
     """
     result = execute_query(query, (patient_id,), fetch=True)
-    return render_template("encounters.html", data=result)
+    return render_template("encounters/index.html", encounters=result)

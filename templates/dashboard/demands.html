@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Resource Demands</h1>
+
+<div class="table-section">
+    {% if data %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Department ID</th>
+                <th>Average Daily Visits</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ "%.2f" | format(row[1]) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No data available.</p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="/dashboard/diagnoses" class="nav-link">← Previous: Diagnoses</a>
+    <a href="/" class="nav-link" style="float: right;">Home</a>
+</div>
+
+{% endblock %}

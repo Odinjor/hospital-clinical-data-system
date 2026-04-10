@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Patient Report</h1>
+
+<div class="table-section">
+    <h2>Encounters, Diagnoses & Medications</h2>
+    {% if encounters %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Encounter ID</th>
+                <th>ICD-10 Code</th>
+                <th>Provider Role</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in encounters %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] if row[2] else 'N/A' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No encounters found for this patient.</p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="/patients" class="nav-link">← Back to Patients</a>
+</div>
+
+{% endblock %}
