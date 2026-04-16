@@ -1,51 +1,108 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Hospital Dashboard</h1>
-<p>Welcome to the Hospital Clinical Data System</p>
+<div class="dashboard-header">
+    <h1>Welcome to Hospital Clinical Data System</h1>
+    <p>Centralized management and analytics for clinical operations</p>
+</div>
 
 <div class="dashboard-grid">
-    <div class="dashboard-card">
-        <h3>👥 Patient Management</h3>
-        <p>Manage patient records, view medical history, and track encounters.</p>
-        <a href="/patient/index" class="btn-primary">Go to Patients</a>
+    <!-- Core Management -->
+    <div class="dashboard-card primary">
+        <div class="card-icon">👥</div>
+        <h3>Patient Management</h3>
+        <p>Manage patient records, view medical history, track encounters, and generate patient reports.</p>
+        <a href="/patients" class="btn-primary">Manage Patients</a>
     </div>
     
-    <div class="dashboard-card">
-        <h3>🏥 Encounters</h3>
-        <p>Track patient encounters, admissions, and discharge information.</p>
-        <a href="/encounters/index" class="btn-primary">Go to Encounters</a>
+    <div class="dashboard-card primary">
+        <div class="card-icon">🏥</div>
+        <h3>Encounters</h3>
+        <p>Track patient encounters with integrated diagnosis, observations, medications, and administered treatments.</p>
+        <a href="/encounters" class="btn-primary">View Encounters</a>
     </div>
     
-    <div class="dashboard-card">
-        <h3>📊 Visits Analytics</h3>
-        <p>View the number of visits per department.</p>
-        <a href="/dashboard/visits" class="btn-primary">View Visits</a>
+    <div class="dashboard-card primary">
+        <div class="card-icon">👨‍⚕️</div>
+        <h3>Providers</h3>
+        <p>Manage healthcare providers, view by department, and track staffing information.</p>
+        <a href="/providers" class="btn-primary">Manage Providers</a>
     </div>
     
-    <div class="dashboard-card">
-        <h3>📈 Workload Trends</h3>
-        <p>Analyze workload trends across departments by week.</p>
-        <a href="/dashboard/trends" class="btn-primary">View Trends</a>
+    <div class="dashboard-card primary">
+        <div class="card-icon">🏢</div>
+        <h3>Departments</h3>
+        <p>View and manage hospital departments and their workload distribution.</p>
+        <a href="/departments" class="btn-primary">View Departments</a>
     </div>
     
-    <div class="dashboard-card">
-        <h3>🔬 Common Diagnoses</h3>
-        <p>Identify the most common diagnoses in your system.</p>
-        <a href="/dashboard/diagnoses" class="btn-primary">View Diagnoses</a>
+    <!-- Analytics Section -->
+    <div class="dashboard-card analytics">
+        <div class="card-icon">📊</div>
+        <h3>Department Workload</h3>
+        <p>Analyze workload distribution across departments with detailed metrics.</p>
+        <button class="btn-primary" onclick="loadChartModal('/api/dashboard/charts/workload', 'Department Workload')">View Chart</button>
     </div>
     
-    <div class="dashboard-card">
-        <h3>⚙️ Resource Demands</h3>
-        <p>Analyze resource demands and staffing needs by department.</p>
-        <a href="/dashboard/demands" class="btn-primary">View Demands</a>
+    <div class="dashboard-card analytics">
+        <div class="card-icon">🔬</div>
+        <h3>Common Diagnoses</h3>
+        <p>Identify and analyze the most frequent diagnoses in your system.</p>
+        <button class="btn-primary" onclick="loadChartModal('/api/dashboard/charts/diagnoses', 'Common Diagnoses')">View Chart</button>
+    </div>
+    
+    <div class="dashboard-card analytics">
+        <div class="card-icon">📈</div>
+        <h3>Monthly Volume</h3>
+        <p>Track monthly patient volume trends and visits over time.</p>
+        <button class="btn-primary" onclick="loadChartModal('/api/dashboard/charts/volume', 'Monthly Volume')">View Chart</button>
+    </div>
+    
+    <div class="dashboard-card analytics">
+        <div class="card-icon">🔮</div>
+        <h3>Resource Forecast</h3>
+        <p>Forecast department demand and resource requirements for better planning.</p>
+        <button class="btn-primary" onclick="loadChartModal('/api/dashboard/charts/forecast', 'Resource Forecast')">View Chart</button>
+    </div>
+    
+    <!-- Studies Section -->
+    <div class="dashboard-card studies">
+        <div class="card-icon">📚</div>
+        <h3>Clinical Studies</h3>
+        <p>Manage clinical studies with integrated enrollment tracking and patient enrollment data.</p>
+        <a href="/studies" class="btn-primary">View Studies</a>
+    </div>
+</div>
+
+<!-- Chart Modal -->
+<div id="chartModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeChartModal()">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <img id="chartImage" src="" alt="Chart">
     </div>
 </div>
 
 <style>
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px 0;
+}
+
+.dashboard-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.dashboard-header p {
+    color: #7f8c8d;
+    font-size: 1.1em;
+}
+
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 25px;
     margin: 40px 0;
 }
@@ -55,31 +112,120 @@
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    border-left: 5px solid #3498db;
+    border-top: 5px solid #3498db;
     transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-card.primary {
+    border-top-color: #3498db;
+}
+
+.dashboard-card.analytics {
+    border-top-color: #2ecc71;
+}
+
+.dashboard-card.studies {
+    border-top-color: #e74c3c;
 }
 
 .dashboard-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.card-icon {
+    font-size: 2.5em;
+    margin-bottom: 10px;
 }
 
 .dashboard-card h3 {
     margin-top: 0;
+    margin-bottom: 10px;
     color: #2c3e50;
     font-size: 1.3em;
 }
 
 .dashboard-card p {
     color: #7f8c8d;
-    margin: 15px 0;
+    margin: 0 0 15px 0;
     font-size: 0.95em;
+    flex-grow: 1;
 }
 
 .dashboard-card .btn-primary {
+    margin-top: auto;
     width: 100%;
-    margin-top: 15px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 30px;
+    border: 1px solid #888;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1000px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #000;
+}
+
+#chartImage {
+    max-width: 100%;
+    height: auto;
+    margin-top: 20px;
 }
 </style>
+
+<script>
+function loadChartModal(chartUrl, title) {
+    const modal = document.getElementById('chartModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const chartImage = document.getElementById('chartImage');
+    
+    modalTitle.textContent = title;
+    chartImage.src = chartUrl;
+    modal.style.display = 'block';
+}
+
+function closeChartModal() {
+    const modal = document.getElementById('chartModal');
+    modal.style.display = 'none';
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('chartModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
 
 {% endblock %}

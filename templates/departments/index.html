@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🏢 Department Management</h1>
+    <a href="/" class="btn-secondary">← Back to Dashboard</a>
+</div>
+
+<div class="tabs-container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('list')">Department List</button>
+        <button class="tab-btn" onclick="switchTab('view')">View Department Details</button>
+    </div>
+
+    <!-- Department List Tab -->
+    <div id="list" class="tab-content active">
+        <div class="table-card">
+            <h3>All Departments</h3>
+            <div id="departmentListContainer">
+                <p>Loading departments...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Department Tab -->
+    <div id="view" class="tab-content">
+        <div class="form-card">
+            <h3>View Department Details</h3>
+            <form id="viewDepartmentForm">
+                <div class="form-group">
+                    <label for="viewDepartmentId">Department ID:</label>
+                    <input type="number" id="viewDepartmentId" name="department_id" required min="1">
+                </div>
+                <button type="submit" class="btn-primary">View Details</button>
+            </form>
+            <div id="departmentDetails"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #3498db;
+}
+
+.page-header h1 {
+    margin: 0;
+    flex: 1;
+}
+
+.tabs-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.tabs {
+    display: flex;
+    background-color: #ecf0f1;
+    border-bottom: 2px solid #bdc3c7;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    color: #34495e;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn:hover {
+    background-color: #bdc3c7;
+    color: #2c3e50;
+}
+
+.tab-btn.active {
+    background-color: #3498db;
+    color: white;
+    border-bottom-color: #2980b9;
+}
+
+.tab-content {
+    display: none;
+    padding: 30px;
+    animation: fadeIn 0.3s;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.form-card, .table-card {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    border-left: 4px solid #3498db;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 3px;
+    font-size: 1em;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.data-table thead {
+    background-color: #34495e;
+    color: white;
+}
+
+.data-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.data-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+.result-message {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    display: none;
+}
+
+.result-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
+
+.result-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+}
+
+.department-detail {
+    background: white;
+    padding: 20px;
+    margin-top: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #2ecc71;
+}
+
+.department-detail h4 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.department-detail p {
+    margin: 10px 0;
+}
+
+.department-detail strong {
+    color: #2c3e50;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    margin: 2px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.85em;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+}
+
+.btn-view {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-view:hover {
+    background-color: #2980b9;
+}
+</style>
+
+<script>
+function switchTab(tabName) {
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => content.classList.remove('active'));
+    
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+    
+    if (tabName === 'list') {
+        loadDepartmentList();
+    }
+}
+
+function loadDepartmentList() {
+    fetch('/api/departments')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('departmentListContainer');
+            if (!data || data.length === 0 || data.error) {
+                container.innerHTML = '<p>No departments found.</p>';
+                return;
+            }
+            
+            let html = `<table class="data-table"><thead><tr>
+                <th>Department ID</th>
+                <th>Department Name</th>
+                <th>Actions</th>
+            </tr></thead><tbody>`;
+            
+            data.forEach(dept => {
+                html += `<tr>
+                    <td>${dept[0]}</td>
+                    <td>${dept[1]}</td>
+                    <td>
+                        <button class="btn-small btn-view" onclick="viewDepartment(${dept[0]})">View Details</button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            document.getElementById('departmentListContainer').innerHTML = `<div class="result-message error">Error loading departments: ${error.message}</div>`;
+        });
+}
+
+document.getElementById('viewDepartmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const dept_id = document.getElementById('viewDepartmentId').value;
+    viewDepartment(dept_id);
+});
+
+function viewDepartment(dept_id) {
+    fetch(`/api/departments/${dept_id}`)
+        .then(response => response.json())
+        .then(data => {
+            const detailsDiv = document.getElementById('departmentDetails');
+            if (data.error) {
+                detailsDiv.innerHTML = `<div class="result-message error">${data.error}</div>`;
+            } else {
+                detailsDiv.innerHTML = `
+                    <div class="department-detail">
+                        <h4>Department Information</h4>
+                        <p><strong>Department ID:</strong> ${data[0] || 'N/A'}</p>
+                        <p><strong>Department Name:</strong> ${data[1] || 'N/A'}</p>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            document.getElementById('departmentDetails').innerHTML = `<div class="result-message error">Error: ${error.message}</div>`;
+        });
+}
+
+window.addEventListener('load', function() {
+    loadDepartmentList();
+});
+</script>
+
+{% endblock %}

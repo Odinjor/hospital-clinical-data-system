@@ -1,0 +1,522 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1>👨‍⚕️ Provider Management</h1>
+    <a href="/" class="btn-secondary">← Back to Dashboard</a>
+</div>
+
+<div class="tabs-container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('list')">Provider List</button>
+        <button class="tab-btn" onclick="switchTab('byDept')">Providers by Department</button>
+        <button class="tab-btn" onclick="switchTab('view')">View Provider</button>
+        <button class="tab-btn" onclick="switchTab('add')">Add New Provider</button>
+        <button class="tab-btn" onclick="switchTab('edit')">Update Provider</button>
+    </div>
+
+    <!-- Provider List Tab -->
+    <div id="list" class="tab-content active">
+        <div class="table-card">
+            <h3>All Providers</h3>
+            <div id="providerListContainer">
+                <p>Loading providers...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Providers by Department Tab -->
+    <div id="byDept" class="tab-content">
+        <div class="form-card">
+            <h3>Providers by Department</h3>
+            <form id="byDeptForm">
+                <div class="form-group">
+                    <label for="deptId">Department ID:</label>
+                    <input type="number" id="deptId" name="department_id" required min="1">
+                </div>
+                <button type="submit" class="btn-primary">Search</button>
+            </form>
+            <div id="byDeptContainer"></div>
+        </div>
+    </div>
+
+    <!-- View Provider Tab -->
+    <div id="view" class="tab-content">
+        <div class="form-card">
+            <h3>View Provider Details</h3>
+            <form id="viewProviderForm">
+                <div class="form-group">
+                    <label for="viewProviderId">Provider ID:</label>
+                    <input type="number" id="viewProviderId" name="provider_id" required min="1">
+                </div>
+                <button type="submit" class="btn-primary">View</button>
+            </form>
+            <div id="providerDetails"></div>
+        </div>
+    </div>
+
+    <!-- Add Provider Tab -->
+    <div id="add" class="tab-content">
+        <div class="form-card">
+            <h3>Add New Provider</h3>
+            <form id="addProviderForm">
+                <div class="form-group">
+                    <label for="addSpecialty">Specialty:</label>
+                    <input type="text" id="addSpecialty" name="specialty" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="addRole">Role:</label>
+                    <input type="text" id="addRole" name="role" placeholder="Optional">
+                </div>
+                
+                <div class="form-group">
+                    <label for="addDepartment">Department ID:</label>
+                    <input type="number" id="addDepartment" name="department_id" required min="1">
+                </div>
+                
+                <button type="submit" class="btn-primary">Add Provider</button>
+            </form>
+            <div id="addResult"></div>
+        </div>
+    </div>
+
+    <!-- Update Provider Tab -->
+    <div id="edit" class="tab-content">
+        <div class="form-card">
+            <h3>Update Provider Information</h3>
+            <form id="updateProviderForm">
+                <div class="form-group">
+                    <label for="updateProviderId">Provider ID:</label>
+                    <input type="number" id="updateProviderId" name="provider_id" required min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="updateSpecialty">Specialty:</label>
+                    <input type="text" id="updateSpecialty" name="specialty" placeholder="Leave blank to keep unchanged">
+                </div>
+                
+                <div class="form-group">
+                    <label for="updateRole">Role:</label>
+                    <input type="text" id="updateRole" name="role" placeholder="Leave blank to keep unchanged">
+                </div>
+                
+                <div class="form-group">
+                    <label for="updateDepartment">Department ID:</label>
+                    <input type="number" id="updateDepartment" name="department_id" placeholder="Leave blank to keep unchanged" min="1">
+                </div>
+                
+                <button type="submit" class="btn-primary">Update Provider</button>
+            </form>
+            <div id="updateResult"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #3498db;
+}
+
+.page-header h1 {
+    margin: 0;
+    flex: 1;
+}
+
+.tabs-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.tabs {
+    display: flex;
+    background-color: #ecf0f1;
+    border-bottom: 2px solid #bdc3c7;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #34495e;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn:hover {
+    background-color: #bdc3c7;
+    color: #2c3e50;
+}
+
+.tab-btn.active {
+    background-color: #3498db;
+    color: white;
+    border-bottom-color: #2980b9;
+}
+
+.tab-content {
+    display: none;
+    padding: 30px;
+    animation: fadeIn 0.3s;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.form-card, .table-card {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    border-left: 4px solid #3498db;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 3px;
+    font-size: 1em;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.data-table thead {
+    background-color: #34495e;
+    color: white;
+}
+
+.data-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.data-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+.result-message {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    display: none;
+}
+
+.result-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
+
+.result-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+}
+
+.provider-detail {
+    background: white;
+    padding: 20px;
+    margin-top: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #2ecc71;
+}
+
+.provider-detail h4 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.provider-detail p {
+    margin: 10px 0;
+}
+
+.provider-detail strong {
+    color: #2c3e50;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    margin: 2px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.85em;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+}
+
+.btn-edit {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #2980b9;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+</style>
+
+<script>
+function switchTab(tabName) {
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => content.classList.remove('active'));
+    
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+    
+    if (tabName === 'list') {
+        loadProviderList();
+    }
+}
+
+function loadProviderList() {
+    fetch('/api/providers')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('providerListContainer');
+            if (!data || data.length === 0 || data.error) {
+                container.innerHTML = '<p>No providers found.</p>';
+                return;
+            }
+            
+            let html = `<table class="data-table"><thead><tr>
+                <th>Provider ID</th>
+                <th>Specialty</th>
+                <th>Role</th>
+                <th>Department ID</th>
+                <th>Actions</th>
+            </tr></thead><tbody>`;
+            
+            data.forEach(provider => {
+                html += `<tr>
+                    <td>${provider[0]}</td>
+                    <td>${provider[1]}</td>
+                    <td>${provider[2] || 'N/A'}</td>
+                    <td>${provider[3]}</td>
+                    <td>
+                        <button class="btn-small btn-edit" onclick="viewAndEdit(${provider[0]})">Edit</button>
+                        <button class="btn-small btn-delete" onclick="deleteProvider(${provider[0]})">Delete</button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            document.getElementById('providerListContainer').innerHTML = `<div class="result-message error">Error: ${error.message}</div>`;
+        });
+}
+
+// Providers by Department
+document.getElementById('byDeptForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const deptId = document.getElementById('deptId').value;
+    
+    fetch(`/api/providers/department/${deptId}`)
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('byDeptContainer');
+            if (!data || data.length === 0 || data.error) {
+                container.innerHTML = '<p>No providers found for this department.</p>';
+                return;
+            }
+            
+            let html = `<table class="data-table"><thead><tr>
+                <th>Provider ID</th>
+                <th>Specialty</th>
+                <th>Role</th>
+            </tr></thead><tbody>`;
+            
+            data.forEach(provider => {
+                html += `<tr>
+                    <td>${provider[0]}</td>
+                    <td>${provider[1]}</td>
+                    <td>${provider[2] || 'N/A'}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            document.getElementById('byDeptContainer').innerHTML = `<div class="result-message error">Error: ${error.message}</div>`;
+        });
+});
+
+// View Provider
+document.getElementById('viewProviderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const providerId = document.getElementById('viewProviderId').value;
+    
+    fetch(`/api/providers/${providerId}`)
+        .then(response => response.json())
+        .then(data => {
+            const detailsDiv = document.getElementById('providerDetails');
+            if (data.error) {
+                detailsDiv.innerHTML = `<div class="result-message error">${data.error}</div>`;
+            } else {
+                detailsDiv.innerHTML = `
+                    <div class="provider-detail">
+                        <h4>Provider Information</h4>
+                        <p><strong>Provider ID:</strong> ${data[0] || 'N/A'}</p>
+                        <p><strong>Specialty:</strong> ${data[1] || 'N/A'}</p>
+                        <p><strong>Role:</strong> ${data[2] || 'N/A'}</p>
+                        <p><strong>Department ID:</strong> ${data[3] || 'N/A'}</p>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            document.getElementById('providerDetails').innerHTML = `<div class="result-message error">Error: ${error.message}</div>`;
+        });
+});
+
+// Add Provider
+document.getElementById('addProviderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    
+    fetch('/api/providers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        const resultDiv = document.getElementById('addResult');
+        if (data.error) {
+            resultDiv.innerHTML = `<div class="result-message error">${data.error}</div>`;
+        } else {
+            resultDiv.innerHTML = `<div class="result-message success">✓ Provider added successfully!</div>`;
+            document.getElementById('addProviderForm').reset();
+        }
+    })
+    .catch(error => {
+        document.getElementById('addResult').innerHTML = `<div class="result-message error">Error: ${error.message}</div>`;
+    });
+});
+
+// Update Provider
+document.getElementById('updateProviderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const provider_id = document.getElementById('updateProviderId').value;
+    const formData = new FormData(this);
+    
+    fetch(`/api/providers/${provider_id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        const resultDiv = document.getElementById('updateResult');
+        if (data.error) {
+            resultDiv.innerHTML = `<div class="result-message error">${data.error}</div>`;
+        } else {
+            resultDiv.innerHTML = `<div class="result-message success">✓ Provider updated successfully!</div>`;
+        }
+    })
+    .catch(error => {
+        document.getElementById('updateResult').innerHTML = `<div class="result-message error">Error: ${error.message}</div>`;
+    });
+});
+
+// Delete Provider
+function deleteProvider(providerId) {
+    if (!confirm('Are you sure you want to delete this provider?')) return;
+    
+    fetch(`/api/providers/${providerId}`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error: ' + data.error);
+            } else {
+                alert('Provider deleted successfully');
+                loadProviderList();
+            }
+        })
+        .catch(error => alert('Error: ' + error.message));
+}
+
+function viewAndEdit(providerId) {
+    document.getElementById('updateProviderId').value = providerId;
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    btns[4].classList.add('active');
+    document.getElementById('list').classList.remove('active');
+    document.getElementById('edit').classList.add('active');
+}
+
+window.addEventListener('load', function() {
+    loadProviderList();
+});
+</script>
+
+{% endblock %}

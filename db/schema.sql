@@ -16,8 +16,8 @@ create table Patient(
 );
 /*Tables that depend on the above*/
 create table Provider( 
-	provider_id INT auto_increment primary key,
-	speacialty VARCHAR(100),
+	provider_id INT not null auto_increment primary key,
+	specialty VARCHAR(100),
 	role VARCHAR(50),
 	dept_id INT,
 	foreign key (dept_id) references department(dept_id)
@@ -41,6 +41,7 @@ create table Diagnosis(
 	diagnosis_id int AUTO_INCREMENT primary key,
 	encounter_id INT,
 	icd10_code VARCHAR(10),
+	diagnosis_description VARCHAR(500) null,
 	diagnosis_date DATE,
 	foreign key (encounter_id) references Encounter(encounter_id)
 );
@@ -95,10 +96,4 @@ create table Study_Enrollment (
 	foreign key (study_id) references  Study(study_id),
 	foreign key (patient_id) references Patient(patient_id)
 );
-
-create table Staffing_Notes(
-	staffing_date DATE,
-	staff_status VARCHAR(50)
-);
-
 

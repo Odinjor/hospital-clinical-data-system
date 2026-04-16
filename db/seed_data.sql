@@ -303,13 +303,6 @@ INSERT INTO Medication_Administration
 (47,11,4,'2026-01-28'),
 (48,1,1,'2026-01-29');
 
-insert into Staffing_Notes( staffing_date, staff_status) values
-('2026-01-11', 'Overstaffed'),
-('2026-01-18', 'Understaffed'),
-('2026-01-25', 'Staffed'),
-('2026-02-01', 'Staffed'),
-('2026-02-08', 'Overstaffed'),
-('2026-02-15', 'Overstaffed');
 
 
 
