@@ -1,10 +1,10 @@
-# Hospital Clinical Data System
+# Hospital Management System
 
 A comprehensive web-based clinical data management system designed for hospitals to centralize patient records, encounter tracking, provider management, and clinical analytics.
 
 ## Overview
 
-The Hospital Clinical Data System is a Flask-based application that provides integrated management of clinical operations including patient data, medical encounters, diagnoses, medications, observations, departments, providers, and clinical studies. The system includes real-time dashboards with advanced analytics and forecasting capabilities.
+The Hospital Management System is a Flask-based application that provides integrated management of clinical operations including patient data, medical encounters, diagnoses, medications, observations, departments, providers, and clinical studies. The system includes real-time dashboards with advanced analytics and forecasting capabilities.
 
 ## Features
 
